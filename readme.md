@@ -19,3 +19,4 @@ Another reason why I have to build this is that I hate the new `wecqu` under the
 AGPL to force them ether opensource of their code or make another one without my function.
 
 # License
+AGPL 3.0
