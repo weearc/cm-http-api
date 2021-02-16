@@ -14,6 +14,13 @@ __all__ = ('cm_http',)
 
 
 class cm_http():
+    """
+
+    Args:
+        username (str): authserver username
+        password (str): authserver password
+        webdriver_dir (str, optional): path of webdriver. Defaults to "chromedriver".
+    """
     def __init__(self, username, password, webdriver_dir="chromedriver"):
         self.username = username
         self.password = password
@@ -21,6 +28,14 @@ class cm_http():
         self.driver = None
 
     def start_webdriver(self, force=False):
+        """Start webdriver
+
+        Args:
+            force (bool, optional): restart even if webdriver is running. Defaults to False.
+
+        Returns:
+            webdriver: webdriver started
+        """
         if self.driver is not None:
             if force or not self.driver.service.process:
                 self.driver.quit()
@@ -38,10 +53,20 @@ class cm_http():
         return self.driver
 
     def stop_webdriver(self):
+        """Stop webdriver. It should be manually called after all operation are done.
+        """
         if self.driver is not None:
             self.driver.quit()
 
     def login(self, force=False):
+        """Log in http://my.cqu.edu.cn/enroll/. No need to manually call `start_webdriver`.
+
+        Args:
+            force (bool, optional): relogin even if in logined status. Defaults to False.
+
+        Returns:
+            bool: whether login is successful
+        """
         self.start_webdriver()
         self.driver.get('http://my.cqu.edu.cn/enroll/Home')
         if force or self.driver.current_url.startswith('http://authserver.cqu.edu.cn/authserver/login'):
@@ -53,6 +78,14 @@ class cm_http():
         return self.driver.current_url.startswith('http://my.cqu.edu.cn/enroll/Home')
 
     def get_timetable(self):
+        """Get timetable data. No need to manually call `start_webdriver` and/or `login`.
+
+        Raises:
+            Exception: Something unexpected.
+
+        Returns:
+            dict: timetable data
+        """
         self.login()
         wait = WebDriverWait(self.driver, 5)
 
@@ -79,6 +112,11 @@ class cm_http():
             raise Exception()
 
     def get_token(self):
+        """Get token and its expiration time
+
+        Returns:
+            dict: {'value': token in `str`, 'expire': expiration time in `datetime`}
+        """
         self.login()
         wait = WebDriverWait(self.driver, 5)
 
@@ -104,7 +142,7 @@ def main():
     print('Timetable is saved to timetable.json')
     token = cm.get_token()
     print("Token:", token["value"])
-    print("Token expire time:", datetime.strftime(
+    print("Token expiration time:", datetime.strftime(
         token['expire'], '%Y-%m-%d %H:%M:%S'))
     cm.stop_webdriver()
 

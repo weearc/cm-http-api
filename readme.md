@@ -6,6 +6,10 @@ but failed at last because of js Ajax loading of specific page. I tried every me
 So this solution maybe design for getting token for logging in process as we have known that all requests need this
 token.
 
+# Usage
+
+Refer to `main` function of [main.py](main.py) as a demo, and docstring of `cm_http` class.
+
 # To List
 
 - [x] get token
