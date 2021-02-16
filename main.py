@@ -1,32 +1,35 @@
+import ast
+import configparser
+import time
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait                            # available since 2.4.0
-from selenium.webdriver.support import expected_conditions as EC
-import time
+
+config = configparser.RawConfigParser()
+config.read_file(open('config.txt'))
+webdriver_dir = config.get("config", "webdriver_dir")
+username = config.get("config", "username")
+password = config.get("config", "password")
 
 
 def main():
-    student_num = ''
-    # driver = webdriver.PhantomJS('../webdriver-phantomjs/phantomjs')
-
-    driver = webdriver.Chrome("../webdriver-chrome/chromedriver")
     options = Options()
     options.add_argument('--headless')
-    driver.get('http://authserver.cqu.edu.cn/authserver/login?service=http://my.cqu.edu.cn/authserver/authentication/cas')
+    driver = webdriver.Chrome(webdriver_dir, options=options)
+    driver.get(
+        'http://authserver.cqu.edu.cn/authserver/login?service=http://my.cqu.edu.cn/authserver/authentication/cas')
     driver.find_element_by_id('username').clear()
-    driver.find_element_by_id('username').send_keys('')
+    driver.find_element_by_id('username').send_keys(username)
     driver.find_element_by_id('password').clear()
-    driver.find_element_by_id('password').send_keys('')
+    driver.find_element_by_id('password').send_keys(password)
     driver.find_element_by_class_name('auth_login_btn').click()
     driver.get('http://my.cqu.edu.cn/enroll/Home')
     time.sleep(5)
-    # WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="app"]/section/section/main/div/div/div/div/div/div[2]/div[1]/div[1]/button')))
-    # driver.find_element_by_xpath('//*[@id="app"]/section/section/main/div/div/div/div/div/div[2]/div[1]/div[1]/button').click()
-    # WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[3]/div/div[2]/div/div/div[2]/div/div[1]/div[2]/div/button")))
-    # driver.find_element_by_xpath('/html/body/div[3]/div/div[2]/div/div/div[2]/div/div[1]/div[2]/div/button').click()
-    print(driver.page_source)
+    agent = driver.execute_script('return localStorage.getItem("u__Access-Token");')
     driver.quit()
+    token = ast.literal_eval(agent)["value"]
+    print(token)
+
 
 if __name__ == '__main__':
     main()
