@@ -9,7 +9,7 @@ token.
 # To List
 
 - [x] get token
-- [ ] get json format timetable
+- [x] get json format timetable
 - [ ] parsing timetable.json translate it to `xlsx` format for example
 - [ ] using in [cqu_timetable_new](https://github.com/weearc/cqu_timetable_new)
 
