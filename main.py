@@ -214,7 +214,6 @@ class ConfigEmptyException(Exception):
 
 def main():
     webdriver_dir, username, password = load_config('config.txt')
-    print(webdriver_dir, password, username)
     cm = cm_http(username=username, password=password,
                  webdriver_dir=webdriver_dir)
     cm.get_timetable_by_request()
@@ -226,6 +225,7 @@ def main():
     print("Token expiration time:", datetime.strftime(
         token['expire'], '%Y-%m-%d %H:%M:%S'))
     cm.stop_webdriver()
+
 
 
 if __name__ == '__main__':
