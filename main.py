@@ -103,6 +103,11 @@ class cm_http():
         return self.driver.current_url.startswith('http://my.cqu.edu.cn/enroll/Home')
 
     def get_timetable_by_request(self):
+        """Get timetable using requests
+        :exception Network Error
+                    Server Error
+        :return: json
+        """
         enroll_api = 'http://my.cqu.edu.cn/enroll-api/timetable/student/' + self.get_student_num()
         ua = self.driver.execute_script("return navigator.userAgent;")
         headers = {
@@ -118,6 +123,10 @@ class cm_http():
         return re.json()
 
     def get_student_num(self):
+        """Get student number from http://my.cqy.edu.cn/enroll/
+
+        :return: str
+        """
         self.login()
         wait = WebDriverWait(self.driver, 5)
         try:
@@ -206,17 +215,17 @@ class ConfigEmptyException(Exception):
 def main():
     webdriver_dir, username, password = load_config('config.txt')
     print(webdriver_dir, password, username)
-    # cm = cm_http(username=username, password=password,
-    #              webdriver_dir=webdriver_dir)
-    # cm.get_timetable_by_request()
-    # timetable_dict = cm.get_timetable()
-    # json.dump(timetable_dict, open('timetable.json', 'w'), ensure_ascii=False, indent=2)
-    # print('Timetable is saved to timetable.json')
-    # token = cm.get_token()
-    # print("Token:", token["value"])
-    # print("Token expiration time:", datetime.strftime(
-    #     token['expire'], '%Y-%m-%d %H:%M:%S'))
-    # cm.stop_webdriver()
+    cm = cm_http(username=username, password=password,
+                 webdriver_dir=webdriver_dir)
+    cm.get_timetable_by_request()
+    timetable_dict = cm.get_timetable()
+    json.dump(timetable_dict, open('timetable.json', 'w'), ensure_ascii=False, indent=2)
+    print('Timetable is saved to timetable.json')
+    token = cm.get_token()
+    print("Token:", token["value"])
+    print("Token expiration time:", datetime.strftime(
+        token['expire'], '%Y-%m-%d %H:%M:%S'))
+    cm.stop_webdriver()
 
 
 if __name__ == '__main__':
