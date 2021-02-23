@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cm-http-api"
-version = "0.1.0"
+version = "0.1.1"
 description = "get necessary information for Unified certification of educational administration system"
 authors = ["weearc <qby19981121@gmail.com>"]
 license = "AGPL-3.0-only"
