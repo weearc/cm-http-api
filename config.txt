@@ -1,4 +1,0 @@
-[config]
-webdriver_dir = ../webdriver-chrome/chromedriver
-username =
-password =
